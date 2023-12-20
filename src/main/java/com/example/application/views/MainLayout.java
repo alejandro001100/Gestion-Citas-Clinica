@@ -10,7 +10,6 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
@@ -20,11 +19,11 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
- * The main view is a top-level placeholder for other views.
+ * El layout principal es un contenedor de nivel superior para otras vistas.
  */
 public class MainLayout extends AppLayout {
 
-    private H2 viewTitle;
+    private H1 viewTitle;
 
     public MainLayout() {
         setPrimarySection(Section.DRAWER);
@@ -34,16 +33,16 @@ public class MainLayout extends AppLayout {
 
     private void addHeaderContent() {
         DrawerToggle toggle = new DrawerToggle();
-        toggle.setAriaLabel("Menu toggle");
+        toggle.setAriaLabel("Menú");
 
-        viewTitle = new H2();
+        viewTitle = new H1();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
 
         addToNavbar(true, toggle, viewTitle);
     }
 
     private void addDrawerContent() {
-        H1 appName = new H1("Gestion De Citas Clinica");
+        H1 appName = new H1("Gestión De Citas Clínica");
         appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
         Header header = new Header(appName);
 
@@ -67,9 +66,11 @@ public class MainLayout extends AppLayout {
     }
 
     private Footer createFooter() {
-        Footer layout = new Footer();
-
-        return layout;
+        Footer footer = new Footer();
+        H1 footerText = new H1("Alejandro Paqui");
+        footerText.addClassNames(LumoUtility.FontSize.SMALL, LumoUtility.Margin.NONE);
+        footer.add(footerText);
+        return footer;
     }
 
     @Override

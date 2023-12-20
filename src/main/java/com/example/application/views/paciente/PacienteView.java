@@ -1,5 +1,7 @@
 package com.example.application.views.paciente;
 
+import com.example.application.data.Paciente;
+import com.example.application.services.PacienteService;
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -9,14 +11,12 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
 @PageTitle("Paciente")
 @Route(value = "paciente", layout = MainLayout.class)
@@ -24,51 +24,31 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 public class PacienteView extends Composite<VerticalLayout> {
 
     public PacienteView() {
-        H2 h2 = new H2();
-        Hr hr = new Hr();
-        FormLayout formLayout2Col = new FormLayout();
-        TextField textField = new TextField();
-        TextField textField2 = new TextField();
-        NumberField numberField = new NumberField();
-        TextField textField3 = new TextField();
-        HorizontalLayout layoutRow = new HorizontalLayout();
-        Button buttonPrimary = new Button();
-        Button buttonSecondary = new Button();
-        Hr hr2 = new Hr();
-        getContent().setWidth("100%");
-        getContent().getStyle().set("flex-grow", "1");
-        h2.setText("Ingrese Datos Paciente");
-        getContent().setAlignSelf(FlexComponent.Alignment.START, h2);
-        h2.setWidth("max-content");
-        formLayout2Col.setWidth("100%");
-        textField.setLabel("Nombres");
-        textField.setWidth("min-content");
-        textField2.setLabel("Apellidos");
-        textField2.setWidth("min-content");
-        numberField.setLabel("Edad");
-        numberField.setWidth("min-content");
-        textField3.setLabel("Cedula");
-        textField3.setWidth("min-content");
-        layoutRow.setWidthFull();
-        getContent().setFlexGrow(1.0, layoutRow);
-        layoutRow.addClassName(Gap.MEDIUM);
-        layoutRow.setWidth("100%");
-        layoutRow.getStyle().set("flex-grow", "1");
-        buttonPrimary.setText("Guardar");
-        buttonPrimary.setWidth("min-content");
-        buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buttonSecondary.setText("Cancelar");
-        buttonSecondary.setWidth("min-content");
-        getContent().add(h2);
-        getContent().add(hr);
-        getContent().add(formLayout2Col);
-        formLayout2Col.add(textField);
-        formLayout2Col.add(textField2);
-        formLayout2Col.add(numberField);
-        formLayout2Col.add(textField3);
-        getContent().add(layoutRow);
-        layoutRow.add(buttonPrimary);
-        layoutRow.add(buttonSecondary);
-        layoutRow.add(hr2);
+        H2 title = new H2("Ingrese Datos Paciente");
+        FormLayout formLayout = new FormLayout();
+        TextField nombresField = new TextField("Nombres");
+        TextField apellidosField = new TextField("Apellidos");
+        NumberField edadField = new NumberField("Edad");
+        TextField cedulaField = new TextField("Cedula");
+
+        Button guardarButton = new Button("Guardar");
+        guardarButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        guardarButton.addClickListener(e -> guardarPaciente(nombresField.getValue(), apellidosField.getValue(), edadField.getValue(), cedulaField.getValue()));
+
+        formLayout.add(nombresField, apellidosField, edadField, cedulaField);
+
+        VerticalLayout content = getContent();
+        content.add(title, new Hr(), formLayout, guardarButton);
+    }
+
+    private void guardarPaciente(String nombres, String apellidos, Double edad, String cedula) {
+        if (nombres.isEmpty() || apellidos.isEmpty() || edad == null || cedula.isEmpty()) {
+            Notification.show("Por favor complete todos los campos.");
+            return;
+        }
+
+        Paciente nuevoPaciente = new Paciente(cedula, nombres, apellidos, edad.intValue());
+        PacienteService.guardarPaciente(nuevoPaciente);
+        Notification.show("Paciente guardado con éxito.");
     }
 }
